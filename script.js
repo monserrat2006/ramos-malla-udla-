@@ -74,7 +74,54 @@ const malla = [
 
 const aprobados = new Set(JSON.parse(localStorage.getItem("ramosAprobados")) || []);
 
+const defaultColores = {
+  colorAprobadoBg: "#ffd6ec",
+  colorAprobadoText: "#000000",
+  colorAprobadoBorder: "#ff69b4",
+
+  colorBloqueadoBg: "#f8f9fa",
+  colorBloqueadoText: "#aaaaaa",
+  colorBloqueadoBorder: "#aaaaaa",
+
+  colorNormalBg: "#ffffff",
+  colorNormalText: "#000000",
+  colorNormalBorder: "#cccccc"
+};
+
+function cargarColoresGuardados() {
+  const coloresGuardados = JSON.parse(localStorage.getItem("coloresPersonalizados"));
+  if (coloresGuardados) {
+    Object.keys(coloresGuardados).forEach(id => {
+      const input = document.getElementById(id);
+      if (input) input.value = coloresGuardados[id];
+    });
+  } else {
+    // Si no hay guardados, asignar los default
+    Object.keys(defaultColores).forEach(id => {
+      const input = document.getElementById(id);
+      if (input) input.value = defaultColores[id];
+    });
+  }
+}
+
+function aplicarColores() {
+  const root = document.documentElement;
+  root.style.setProperty('--aprobado-bg', document.getElementById('colorAprobadoBg').value);
+  root.style.setProperty('--aprobado-color', document.getElementById('colorAprobadoText').value);
+  root.style.setProperty('--aprobado-border', document.getElementById('colorAprobadoBorder').value);
+
+  root.style.setProperty('--bloqueado-bg', document.getElementById('colorBloqueadoBg').value);
+  root.style.setProperty('--bloqueado-color', document.getElementById('colorBloqueadoText').value);
+  root.style.setProperty('--bloqueado-border', document.getElementById('colorBloqueadoBorder').value);
+
+  root.style.setProperty('--normal-bg', document.getElementById('colorNormalBg').value);
+  root.style.setProperty('--normal-color', document.getElementById('colorNormalText').value);
+  root.style.setProperty('--normal-border', document.getElementById('colorNormalBorder').value);
+}
+
 function crearMalla() {
+  aplicarColores();
+
   const contenedor = document.getElementById("malla-container");
   contenedor.innerHTML = "";
 
@@ -89,14 +136,16 @@ function crearMalla() {
 
     semestre.ramos.forEach(ramo => {
       const boton = document.createElement("div");
-      boton.className = "ramo";
+      boton.className = "ramo normal";
       boton.textContent = ramo.nombre;
 
       if (aprobados.has(ramo.id)) {
+        boton.classList.remove("normal");
         boton.classList.add("aprobado");
       } else if (ramo.desbloqueadoSi) {
         const requisitosCumplidos = ramo.desbloqueadoSi.every(id => aprobados.has(id));
         if (!requisitosCumplidos) {
+          boton.classList.remove("normal");
           boton.classList.add("bloqueado");
         }
       }
@@ -117,18 +166,26 @@ function crearMalla() {
 
     contenedor.appendChild(div);
   });
-
-  const totalRamos = malla.flatMap(s => s.ramos).length;
-  const porcentaje = Math.round((aprobados.size / totalRamos) * 100);
-  document.getElementById("avance").textContent = `Avance: ${porcentaje}% (${aprobados.size} de ${totalRamos})`;
 }
 
-function reiniciar() {
-  if (confirm("¿Estás seguro de que quieres reiniciar tu progreso?")) {
-    localStorage.removeItem("ramosAprobados");
-    aprobados.clear();
-    crearMalla();
-  }
-}
+window.addEventListener('load', () => {
+  cargarColoresGuardados();
+  aplicarColores();
+  crearMalla();
 
-crearMalla();
+  const inputsColor = document.querySelectorAll("input[type=color]");
+  inputsColor.forEach(input => {
+    input.addEventListener("input", () => {
+      aplicarColores();
+    });
+  });
+
+  document.getElementById("guardarColores").onclick = () => {
+    const colores = {};
+    document.querySelectorAll("input[type=color]").forEach(input => {
+      colores[input.id] = input.value;
+    });
+    localStorage.setItem("coloresPersonalizados", JSON.stringify(colores));
+    alert("Colores guardados correctamente.");
+  };
+});
