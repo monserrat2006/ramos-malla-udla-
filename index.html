@@ -1,15 +1,61 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Malla Psicología UDLA</title>
-  <link rel="stylesheet" href="estilos.css">
+  <link rel="stylesheet" href="estilos.css" />
 </head>
 <body>
   <h1>Malla Interactiva Psicología UDLA</h1>
-  <h2 id="avance"></h2>
+
+  <section class="color-config">
+    <h2>Configuración de colores</h2>
+
+    <div>
+      <label for="colorAprobadoBg">Fondo Ramos Aprobados:</label><br />
+      <input type="color" id="colorAprobadoBg" />
+    </div>
+    <div>
+      <label for="colorAprobadoText">Texto Ramos Aprobados:</label><br />
+      <input type="color" id="colorAprobadoText" />
+    </div>
+    <div>
+      <label for="colorAprobadoBorder">Borde Ramos Aprobados:</label><br />
+      <input type="color" id="colorAprobadoBorder" />
+    </div>
+
+    <div>
+      <label for="colorBloqueadoBg">Fondo Ramos Bloqueados:</label><br />
+      <input type="color" id="colorBloqueadoBg" />
+    </div>
+    <div>
+      <label for="colorBloqueadoText">Texto Ramos Bloqueados:</label><br />
+      <input type="color" id="colorBloqueadoText" />
+    </div>
+    <div>
+      <label for="colorBloqueadoBorder">Borde Ramos Bloqueados:</label><br />
+      <input type="color" id="colorBloqueadoBorder" />
+    </div>
+
+    <div>
+      <label for="colorNormalBg">Fondo Ramos Normales:</label><br />
+      <input type="color" id="colorNormalBg" />
+    </div>
+    <div>
+      <label for="colorNormalText">Texto Ramos Normales:</label><br />
+      <input type="color" id="colorNormalText" />
+    </div>
+    <div>
+      <label for="colorNormalBorder">Borde Ramos Normales:</label><br />
+      <input type="color" id="colorNormalBorder" />
+    </div>
+
+    <button id="guardarColores">Guardar colores</button>
+  </section>
+
   <div class="contenedor-malla" id="malla-container"></div>
-  <button onclick="reiniciar()">Reiniciar Progreso</button>
+
   <script src="script.js"></script>
 </body>
 </html>
